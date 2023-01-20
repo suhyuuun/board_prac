@@ -8,6 +8,7 @@ import dto.PageDTO;
 public interface BoardService {
 	public int countProcess();
 	public List<BoardDTO> listProcess(PageDTO pv);
+	public void insertProcess(BoardDTO dto);
 	public BoardDTO contentProcess(int no);
 	public void reStepProcess(BoardDTO dto);
 	public void updateProces(BoardDTO dto);

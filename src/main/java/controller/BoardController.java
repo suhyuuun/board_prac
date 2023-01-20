@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import dto.BoardDTO;
@@ -44,5 +45,33 @@ public class BoardController {
 		mav.setViewName("list");
 		return mav;
 	}//end listMethod()
+	
+	@RequestMapping("/view.do")
+	public ModelAndView viewMethod(int currentPage, int no, ModelAndView mav) {
+		mav.addObject("dto", service.contentProcess(no));
+		mav.addObject("currentPage", currentPage);
+		mav.setViewName("view");
+		return mav;
+	}
+	
+	@RequestMapping(value="/write.do", method= RequestMethod.GET)
+	public ModelAndView writeMethod(BoardDTO dto, PageDTO pv, ModelAndView mav) {
+		if(dto.getRef()!=0) {
+			mav.addObject("currentPage", pv.getCurrentPage());
+			mav.addObject("dto",dto);
+		}
+		mav.setViewName("write");
+		return mav;
+	}//end writeMethod()
+	
+	@RequestMapping(value="/write.do",method=RequestMethod.POST)
+	public String writeProcessMethod(BoardDTO dto, PageDTO pv) {
+		service.insertProcess(dto);
+		if(dto.getRef()!=0) {
+			return "redirect:/list.do?currentPage=" + pv.getCurrentPage();
+		}else {
+			return "redirect:/list.do";
+		}
+	}//end writeProcessMethod()
 
 }

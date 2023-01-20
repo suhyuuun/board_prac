@@ -6,13 +6,13 @@ import dao.BoardDao;
 import dto.BoardDTO;
 import dto.PageDTO;
 
-public class BoardServiceImp implements BoardService{
+public class BoardServiceImp implements BoardService {
 	private BoardDao dao;
-	
+
 	public BoardServiceImp() {
 
 	}
-	
+
 	public void setDao(BoardDao dao) {
 		this.dao = dao;
 	}
@@ -28,6 +28,16 @@ public class BoardServiceImp implements BoardService{
 	}
 
 	@Override
+	public void insertProcess(BoardDTO dto) {
+		if(dto.getRef()!=0) {
+			dao.reStepCount(dto);
+			dto.setRe_step(dto.getRe_step() + 1);
+			dto.setRe_level(dto.getRe_level() + 1);
+		}
+		dao.save(dto);
+	}
+
+	@Override
 	public BoardDTO contentProcess(int no) {
 		dao.readCount(no);
 		return dao.content(no);
@@ -35,7 +45,7 @@ public class BoardServiceImp implements BoardService{
 
 	@Override
 	public void reStepProcess(BoardDTO dto) {
-		
+
 	}
 
 	@Override

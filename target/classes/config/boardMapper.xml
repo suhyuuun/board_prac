@@ -22,8 +22,8 @@
 
 	<insert id="save" parameterType="dto.BoardDTO">
 		INSERT INTO prac_board(no, title, writer, reg_date, readcount, ref, re_step, re_level, content, ip)
-		VALUES(prac_board_no_seq.nextval, #{title, jdbcType=VARCHAR},#{writer, jdbcType=VARCHAR},sysdate
-		<choose> 
+		VALUES(prac_board_no_seq.nextval, #{title, jdbcType=VARCHAR},#{writer, jdbcType=VARCHAR}, sysdate, 0,
+		<choose>
 			<when test="ref==0">
 				prac_board_no_seq.nextval
 			</when>
@@ -34,27 +34,35 @@
 		,#{re_step}, #{re_level}, #{content, jdbcType=VARCHAR}, #{ip, jdbcType=VARCHAR})
 	</insert>
 
+	<update id="readCount" parameterType="int">
+		UPDATE prac_board 
+		SET readcount = readcount + 1
+		WHERE no=#{no}
+	</update>
+
 	<select id="view" parameterType="int" resultType="dto.BoardDTO">
-		SELECT * FROM prac_board
+		SELECT * FROM
+		prac_board
 		WHERE no=#{no}
 	</select>
-	
+
 	<update id="reStepCount" parameterType="dto.BoardDTO">
-		UPDATE board 
+		UPDATE pro_board
 		SET re_step = re_step + 1
-		WHERE ref = #{ref} 
+		WHERE ref = #{ref}
 		AND re_step > #{re_step}
 	</update>
-	
+
 	<update id="update" parameterType="dto.BoardDTO">
-		UPDATE prac_board 
+		UPDATE prac_board
 		SET title = #{title}, content=#{content}
 		WHERE no=#{no}
 	</update>
-	
+
 	<delete id="delete" parameterType="int">
 		DELETE FROM prac_board
-		WHERE no=#{no}
+		WHERE
+		no=#{no}
 	</delete>
 
 </mapper>

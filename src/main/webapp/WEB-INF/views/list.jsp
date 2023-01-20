@@ -25,11 +25,11 @@
 
 .pagelist a:hover, .pagelist .pagecolor {
 	text-decoration: none;
-	color: green
+	color: olive;
 }
 
-td{
-	text-align:center;
+td {
+	text-align: center;
 }
 </style>
 </head>
@@ -53,10 +53,17 @@ td{
 				<c:forEach items="${aList}" var="dto">
 					<tr class="dataRow">
 						<td colspan="5">${dto.no}</td>
-						<td colspan="5"><c:url var="path" value="view.do">
+						<td colspan="5">
+							<c:url var="path" value="view.do">
 								<c:param name="currentPage" value="${pv.currentPage}" />
 								<c:param name="no" value="${dto.no}" />
-							</c:url> <a href="${path}" style="text-decoration: none;">${dto.title}</a></td>
+							</c:url> 
+							<!-- 답변글임? -->
+							<c:if test="${dto.re_level>0}">
+								<img src="resources/images/level.gif" width="${20*dto.re_level}" height="15" />
+								<img src="resources/images/re.gif" />
+							</c:if> 
+							<a href="${path}" style="text-decoration: none;">${dto.title}</a></td>
 						<td colspan="5">${dto.writer}</td>
 						<td colspan="5">${dto.reg_date}</td>
 						<td colspan="5">${dto.readcount}</td>
@@ -66,31 +73,36 @@ td{
 		</table>
 
 		<div class="pagelist">
+		<!--페이지 이전 출력 시작 -->
 			<c:if test="${pv.startPage>1}">
 				<a href="list.do?currentPage=${pv.startPage-pv.blockPage}">이전</a>
 			</c:if>
-
+			
+			
+		<!-- 페이지 출력 -->
 			<c:forEach var="page" begin="${pv.startPage}" end="${pv.endPage}">
-				<span> <c:url var="currentPage" value="list.do">
+				<span> 
+				<c:url var="curr" value="list.do">
 						<c:param name="currentPage" value="${page}" />
-						<a href="${currentPage}" class="pagecolor">${page}</a>
-					</c:url> <c:choose>
+				</c:url> 
+				<c:choose>
 						<c:when test="${page==pv.currentPage}">
-							<a href="${currentPage}">${page}</a>
+							<a href="${curr}" class="pagecolor">${page}</a>
 						</c:when>
 						<c:otherwise>
-							<a href="${currentPage}">${page}</a>
+							<a href="${curr}">${page}</a>
 						</c:otherwise>
 					</c:choose>
 				</span>
 			</c:forEach>
 
+		<!-- 다음 -->
 			<c:if test="${pv.endPage<pv.totalPage}">
 				<a href="list.do?currentPage=${pv.startPage+pv.blockPage}">다음</a>
 			</c:if>
 		</div>
 		<form id="frm" name="frm" method="get" action="write.do">
-			<input type="submit" id="btnWrite" value="작성" />
+			<input type="submit" id="btnWrite" value="글 작성하기" />
 		</form>
 	</div>
 </body>
